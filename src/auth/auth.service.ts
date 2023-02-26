@@ -1,38 +1,34 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
-import { User } from "src/user/interface/user.interface";
+import { InjectRepository } from '@nestjs/typeorm';
 import { SignupDto } from "./dto/singup.dto";
 import { JwtService } from '@nestjs/jwt/dist';
+import { Repository } from 'typeorm';
+import { User } from "src/user/entity/user.entity";
 
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectModel('user') 
-        private userModel:Model<User>,
+        @InjectRepository(User) 
+        private userRepository: Repository<User>,
         private jwtService: JwtService
         ) {}
 
     async signup( signupDto: SignupDto):Promise<User> {
-        const { name, email, password } = signupDto
-        return await this.userModel.create({
-            name,
-            email,
-            password
-        })
+        const { name, email, password } = signupDto;        
+        const newUser = this.userRepository.create({ name, email, password})
+        return await this.userRepository.save(newUser)
     }
 
     async signin(email: string, password: string) {
-        const user = await this.userModel.findOne({email});
-        if (!user) throw new NotFoundException()
-        if(user.password !== password) throw new NotFoundException('incorrect password')
-        
-        return this.signUser(user._id, user.email)
+        const user = await this.userRepository.findOne({where: {email}});
+        if (!user) throw new NotFoundException();
+        if(user.password !== password) throw new NotFoundException('incorrect password');
+        return this.signUser(user.id, user.email);
     }
 
-    signUser(userId: Object, email: string) {
+    signUser(id: Object, email: string) {
         return this.jwtService.sign({
-            userId,
+            id,
             email
         })
     }

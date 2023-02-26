@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from './interface/user.interface';
+import { User } from './entity/user.entity';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -12,11 +12,16 @@ export class UserController {
         return this.userService.getAllUser()
     }
 
-
     @UseGuards(AuthGuard('jwt'))
-    @Post(':id')
-    changePassword(@Param('id') id: string, @Body('password') password:string):Promise<string> {
-        return this.userService.changePassword(id, password)
+    @Post('change-password')
+    changePassword(@Request() req: any, @Body('password') password:string):Promise<string> {
+        return this.userService.changePassword(req, password)
+    }
+    
+    @UseGuards(AuthGuard('jwt'))
+    @Delete('delete-user')
+    deleteUser(@Request() req: any):Promise<string> {
+        return this.userService.deleteUser(req)
     }
 
 }

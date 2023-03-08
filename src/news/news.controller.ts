@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post , Delete } from "@nestjs/common";
-import { Param, Request, UseGuards } from "@nestjs/common/decorators";
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Param, Patch, Request, UseGuards } from "@nestjs/common/decorators";
 import { AuthGuard } from "@nestjs/passport";
 import { NewsService } from "./news.service";
 import { News } from "./newsEntity/news.entity";
@@ -23,13 +23,12 @@ export class NewsController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Post('change-news/:id')
+    @Patch('change-news/:id')
     changeMyNews(
         @Request() req:any,
         @Param('id') newsId:number, 
         @Body('text') text: string
         ):Promise<News> {
-
         return this.newsService.changeMyNews(req, newsId, text)
     }
 

@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
 import { Param, Patch, Request, UseGuards } from "@nestjs/common/decorators";
 import { AuthGuard } from "@nestjs/passport";
+import { AdminRoleGuard } from "src/admin-role.guard";
 import { NewsService } from "./news.service";
 import { News } from "./newsEntity/news.entity";
 
@@ -10,7 +11,7 @@ import { News } from "./newsEntity/news.entity";
 export class NewsController {
     constructor( private newsService: NewsService ) {}
 
-
+    @UseGuards(AuthGuard('jwt'), AdminRoleGuard)//here add admin-guard for test!
     @Get()
     getAllNews():Promise<News[]> {
         return this.newsService.getAllNews()

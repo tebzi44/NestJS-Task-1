@@ -23,6 +23,7 @@ export class AuthService {
         const user = await this.userRepository.findOne({where: {email}});
         if (!user) throw new NotFoundException();
         if(user.password !== password) throw new NotFoundException('incorrect password');
+        
         return this.signUser(user.id, user.email);
     }
 

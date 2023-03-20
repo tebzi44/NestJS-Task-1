@@ -13,19 +13,18 @@ export class AuthService {
         private jwtService: JwtService
         ) {}
 
-    async signup( signupDto: SignupDto):Promise<User> {
-        const { name, email, password } = signupDto;        
-        const newUser = this.userRepository.create({ name, email, password})
+    async signup( signupDto: SignupDto):Promise<User> {  
+        const newUser = this.userRepository.create({...signupDto})
         return await this.userRepository.save(newUser)
     }
 
-    async signin(email: string, password: string) {
-        const user = await this.userRepository.findOne({where: {email}});
-        if (!user) throw new NotFoundException();
-        if(user.password !== password) throw new NotFoundException('incorrect password');
+    // async signin(email: string, password: string) {
+    //     const user = await this.userRepository.findOne({where: {email}});
+    //     if (!user) throw new NotFoundException();
+    //     if(user.password !== password) throw new NotFoundException('incorrect password');
         
-        return this.signUser(user.id, user.email);
-    }
+    //     return this.signUser(user.id, user.email);
+    // }
 
     signUser(id: Object, email: string) {
         return this.jwtService.sign({

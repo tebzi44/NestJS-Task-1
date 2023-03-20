@@ -14,7 +14,7 @@ import { UserModule } from './user/user.module';
       port: 5432,
       username: 'postgres',
       password: 'gresi124',
-      database: 'news',
+      database: 'movies_web',
       entities: [User],
       synchronize: true,
     }),

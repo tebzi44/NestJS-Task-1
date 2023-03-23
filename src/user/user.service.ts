@@ -11,11 +11,11 @@ export class UserService {
         return this.userRepository.find()
     }
 
-    async changePassword(req: any, password: string):Promise<string> {
+    async updatePassword(req: any, password: string):Promise<string> {
         const { id }= req.user
-        const newPassword =  await this.userRepository.findOneBy({id});
-        newPassword.password = password;
-        await this.userRepository.save(newPassword)
+        const user =  await this.userRepository.findOneBy({id});
+        user.password = password;
+        await this.userRepository.save(user)
         return  'updated succesfully'
     }
 

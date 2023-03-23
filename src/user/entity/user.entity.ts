@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 export enum isActiveEnum {
     TRUE = 'true',

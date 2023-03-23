@@ -9,7 +9,7 @@ import { User } from 'src/user/entity/user.entity';
 @Module({
     imports: [
         TypeOrmModule.forFeature([User]),
-        JwtModule.register({secret:'hamilton44', signOptions: { expiresIn: '15min' }})
+        JwtModule.register({secret:'hamilton44', signOptions: { expiresIn: '1min' }})
     ],
     controllers: [AuthController],
     providers: [AuthService]

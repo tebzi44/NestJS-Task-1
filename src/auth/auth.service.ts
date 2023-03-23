@@ -18,18 +18,19 @@ export class AuthService {
         return await this.userRepository.save(newUser)
     }
 
-    // async signin(email: string, password: string) {
-    //     const user = await this.userRepository.findOne({where: {email}});
-    //     if (!user) throw new NotFoundException();
-    //     if(user.password !== password) throw new NotFoundException('incorrect password');
+    async signin(email: string, password: string) {
+        const user = await this.userRepository.findOne({where: {email}});
+        if (!user) throw new NotFoundException('user not found');
+        if(user.password !== password) throw new NotFoundException('incorrect password');
         
-    //     return this.signUser(user.id, user.email);
-    // }
+        return this.signUser(user.id, user.email, user.role);
+    }
 
-    signUser(id: Object, email: string) {
+    signUser(id: number, email: string, role:string) {
         return this.jwtService.sign({
             id,
-            email
+            email,
+            role
         })
     }
 }

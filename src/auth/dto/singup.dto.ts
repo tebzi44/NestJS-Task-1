@@ -1,4 +1,5 @@
-import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsStrongPassword, MaxLength, MinLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsEmail, IsEnum, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 import { genderEnum, roleEnum } from 'src/user/entity/user.entity';
 
 export class SignupDto {
@@ -17,13 +18,15 @@ export class SignupDto {
     email: string;
 
     @IsNotEmpty()
-    @IsStrongPassword()
+    @MinLength(8)
+    @MaxLength(30)
     password: string;
 
     @IsEnum(genderEnum)
     gender: genderEnum;
 
     @IsDate()
+    @Type(() => Date)
     birthday: Date
 
     @IsEnum(roleEnum)

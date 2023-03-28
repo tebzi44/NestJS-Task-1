@@ -19,6 +19,6 @@ export class Director {
     })
     birthday: Date
     
-    @ManyToOne(()=> Movie, (movie) => movie.director)
+    @ManyToMany(()=> Movie, (movie) => movie.director)
     movie: Movie[]
 }

@@ -18,6 +18,6 @@ export class Actor {
     })
     birthday: Date
 
-    @ManyToOne(() => Movie, (movie) => movie.actor)
+    @ManyToMany(() => Movie, (movie) => movie.actor)
     movie: Movie[]
 }

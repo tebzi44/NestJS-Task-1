@@ -19,15 +19,15 @@ export class Movie {
     @Column()
     runtime: number
 
-    @OneToMany(() => Genre, (genre) => genre.movie)
+    @ManyToMany(() => Genre, (genre) => genre.movie)
     @JoinTable()
     genre: Genre[];
 
-    @OneToMany(() => Actor, (actor) => actor.movie)
+    @ManyToMany(() => Actor, (actor) => actor.movie)
     @JoinTable()
     actor: Actor[];
 
-    @OneToMany(() => Director, (director) => director.movie )
+    @ManyToMany(() => Director, (director) => director.movie )
     @JoinTable()
     director: Director[];
 }

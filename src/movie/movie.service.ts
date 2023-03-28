@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
+import { AddGenre } from './dto/addGenre.dto';
 import { AddMovieDto } from './dto/addMovie.dto';
 import { Actor } from './entity/actor.entity';
 import { Director } from './entity/director.entity';
@@ -46,8 +47,19 @@ export class MovieService {
         return await this.movieRepository.save(movie)
     }
 
-    
+    async Genres():Promise<Genre[]> {
+        return await this.genreRepository.find()
+    }
 
+    async addGenre(addGenre: AddGenre):Promise<any> {
+        const newGenre =  this.genreRepository.create({...addGenre})
+        console.log(newGenre);
+        return this.genreRepository.save(newGenre)
+    }
+
+    async deleteGenre(id: number):Promise<any> {
+        return await this.genreRepository.delete(id)
+    }
 }
 
 

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, IsNull, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Actor } from "./actor.entity";
 import { Director } from "./director.entity";
 import { Genre } from "./genre.entity";
@@ -18,6 +18,9 @@ export class Movie {
 
     @Column()
     runtime: number
+
+    @Column({ nullable: true })
+    posterURL: string
 
     @ManyToMany(() => Genre, (genre) => genre.movie)
     @JoinTable()

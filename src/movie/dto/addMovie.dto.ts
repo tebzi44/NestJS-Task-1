@@ -5,10 +5,10 @@ export class AddMovieDto {
     @IsString()
     title: string;
 
-    @IsDate()
+    // @IsDate()
     release_date: Date;
 
-    @IsNumber()
+    // @IsNumber()
     runtime: number;
 
     @IsArray()

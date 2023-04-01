@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AddGenre } from './dto/addGenre.dto';
 import { AddMovieDto } from './dto/addMovie.dto';
 import { Actor } from './entity/actor.entity';
@@ -23,6 +23,8 @@ export class MovieService {
         })
         return result
     }
+
+    // 
     async dataFetcher (dataName:number[], dataRepository:Repository<any>) {
         const data = await Promise.all(
             dataName.map(async(id:number) => await dataRepository.findOneBy({id}))
@@ -32,9 +34,11 @@ export class MovieService {
 
     async addMovie(addMovieDto: AddMovieDto):Promise<any> {
         const { title, release_date, runtime, genre, actor, director }= addMovieDto
+        
         let genres = await this.dataFetcher(genre,this.genreRepository)
         let actors = await this.dataFetcher(actor,this.actorRepository)
         let directors = await this.dataFetcher(director,this.directorRepository)
+
         const movie = this.movieRepository.create({
             title,
             release_date,
@@ -45,6 +49,12 @@ export class MovieService {
         })
         console.log(movie)
         return await this.movieRepository.save(movie)
+    }
+
+    async uploadPoster(posterURL: string, id: number):Promise<Movie> {
+        const addPosterURL= await this.movieRepository.findOneBy({id})
+        addPosterURL.posterURL = posterURL
+        return this.movieRepository.save(addPosterURL)        
     }
 
     async Genres():Promise<Genre[]> {

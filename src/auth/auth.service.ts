@@ -4,6 +4,7 @@ import { SignupDto } from "./dto/singup.dto";
 import { JwtService } from '@nestjs/jwt/dist';
 import { Repository } from 'typeorm';
 import { User } from "src/user/entity/user.entity";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -13,16 +14,31 @@ export class AuthService {
         private jwtService: JwtService
         ) {}
 
-    async signup( signupDto: SignupDto):Promise<User> {  
-        const newUser = this.userRepository.create({...signupDto})
+    async signup( signupDto: SignupDto):Promise<User> {
+        const { firstname, lastname, birthday, email, gender, role } = signupDto
+        const saltOrRounds = 10;
+        const password = signupDto.password;
+        const hash = await bcrypt.hash(password, saltOrRounds); 
+
+        const newUser = this.userRepository.create({
+            firstname,
+            lastname,
+            birthday,
+            email,
+            gender,
+            role,
+            password: hash
+         })
         return await this.userRepository.save(newUser)
     }
 
     async signin(email: string, password: string) {
         const user = await this.userRepository.findOne({where: {email}});
         if (!user) throw new NotFoundException('user not found');
-        if(user.password !== password) throw new NotFoundException('incorrect password');
+
+        const isMatch = await bcrypt.compare(password, user.password);
         
+        if(!isMatch) throw new NotFoundException('incorrect password');
         return this.signUser(user.id, user.email, user.role);
     }
 

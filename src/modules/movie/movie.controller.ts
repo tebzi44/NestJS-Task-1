@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Patch, Delete, Query, UseInterceptors, UploadedFile, Param, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+// import { diskStorage } from 'multer';
 import { AddGenre } from './dto/addGenre.dto';
 import { AddMovieDto } from './dto/addMovie.dto';
 import { Genre } from './entity/genre.entity';
@@ -9,18 +9,26 @@ import { extname } from 'path';
 import { Movie } from './entity/movie.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminRoleGuard } from 'src/admin-role.guard';
+import { diskStorage } from 'multer';
 
 @Controller('movie')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class MovieController {
     constructor( private movieService: MovieService) {}
 
-    
     // MOVIE
     @Get()
     getAllMovie(){
         return this.movieService.getAllMovie()
     }
+
+    // %
+    // @Get(':poster-url')
+    // getMoviePoster(@Param('posterURL') posterURL: string) {
+    //     console.log('posterURL:' + posterURL);
+
+    //     return 'hello world'
+    // }
 
     @UseGuards(AdminRoleGuard)
     @Post('add-movie')

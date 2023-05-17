@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AddGenre } from './dto/addGenre.dto';
@@ -10,21 +10,27 @@ import { Movie } from './entity/movie.entity';
 
 @Injectable()
 export class MovieService {
+    // private readonly relations = ["genre"]
+
     constructor( 
         @InjectRepository(Movie) private movieRepository: Repository<Movie>,
         @InjectRepository(Actor) private actorRepository: Repository<Actor>,
         @InjectRepository(Genre) private genreRepository: Repository<Genre>,
         @InjectRepository(Director) private directorRepository: Repository<Director>,
     ) {}
+    
+    
 
     async getAllMovie():Promise<Movie[]> {
         const result = await this.movieRepository.find({
+            // relations: this.relations
             relations:['genre', 'actor', 'director']
         })
+        
         return result
     }
 
-    // 
+    //
     async dataFetcher (dataName:number[], dataRepository:Repository<any>) {
         const data = await Promise.all(
             dataName.map(async(id:number) => await dataRepository.findOneBy({id}))
@@ -33,12 +39,12 @@ export class MovieService {
         }
 
     async addMovie(addMovieDto: AddMovieDto):Promise<any> {
-        const { title, release_date, runtime, genre, actor, director }= addMovieDto
+        const { title, release_date, runtime, genre, actor, director } = addMovieDto
         
-        let genres = await this.dataFetcher(genre,this.genreRepository)
-        let actors = await this.dataFetcher(actor,this.actorRepository)
-        let directors = await this.dataFetcher(director,this.directorRepository)
-
+        let genres = await this.dataFetcher(genre, this.genreRepository)
+        let actors = await this.dataFetcher(actor, this.actorRepository)
+        let directors = await this.dataFetcher(director, this.directorRepository)
+        
         const movie = this.movieRepository.create({
             title,
             release_date,
@@ -47,7 +53,6 @@ export class MovieService {
             actor: actors,
             director: directors
         })
-        console.log(movie)
         return await this.movieRepository.save(movie)
     }
 

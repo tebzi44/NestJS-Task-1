@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsEmail, IsEnum, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
-import { genderEnum, roleEnum } from 'src/user/entity/user.entity';
+import { genderEnum, roleEnum } from 'src/modules/user/entity/user.entity';
 
 export class SignupDto {
     @IsNotEmpty()
@@ -28,7 +28,7 @@ export class SignupDto {
     @IsDate()
     @Type(() => Date)
     birthday: Date
-
-    @IsEnum(roleEnum)
-    role: roleEnum
+    
+    // @IsEnum(roleEnum)
+    // role: roleEnum
 }

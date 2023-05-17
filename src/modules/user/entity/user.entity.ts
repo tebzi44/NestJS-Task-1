@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { JwtToken } from 'src/auth/entity/jwtToken.entity';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 export enum isActiveEnum {
     TRUE = 'true',
@@ -56,4 +57,8 @@ export class User {
         default: isActiveEnum.TRUE
     })
     isActive: isActiveEnum;
+
+    @OneToOne(() => JwtToken, jwtToken => jwtToken.user)
+    @JoinColumn()
+    jwtToken: JwtToken;
 }
